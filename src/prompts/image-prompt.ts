@@ -48,9 +48,12 @@ export const generateImagePrompt = (
     const template = brandTemplates[Math.floor(Math.random() * brandTemplates.length)]
 
     return `
-        Generate a high-quality image for ${item.type}.
+        Input
+        image for ${item.type}.
         Brand Style Guide: ${vibePrompt}
         It should visually communicate the goal: "${item.goal}".
-        Use this creative template for visual direction: ${template}
+        Creative template: ${template}
+        Output:
+        Generate a single Seedream 4 prompt that blends the brand style, scenario, and template into one coherent image description, optimized for realism and Instagram aesthetics.
       `.trim()
 }
