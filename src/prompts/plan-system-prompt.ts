@@ -27,7 +27,7 @@ Return everything as a **single JSON object** with two main keys:
    - "targetAudience" (demographics, psychographics, mediaHabits)
    - "brandPersonality"
    - "contentPillars"
-   - "visualVibe" (mood, colorPalette, typography, photographyStyle)
+   - "visualVibe" (mood, photographyStyle)
    - "platformStrategy"
    - "measurementKPIs"
 

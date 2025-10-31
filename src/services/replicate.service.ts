@@ -1,8 +1,7 @@
 import dotenv from "dotenv"
-import Replicate, {FileOutput} from "replicate"
-import fs from "fs/promises"
+import Replicate from "replicate"
+import fsp from "fs/promises"
 import {v4 as uuid} from "uuid"
-import {outputToFiles} from "../utils/outputToFiles"
 
 dotenv.config()
 
@@ -16,31 +15,46 @@ const replicate = new Replicate({
 /**
  * Генерация через stability с оптимизированными параметрами
  * @param prompt
+ * @param imagePaths
+ * @param seed
  */
-export async function generateStability(prompt: string): Promise<string[] | string> {
+export async function generateSeedream(prompt: string, imagePaths: string[], seed?: string): Promise<string> {
+    console.log(prompt)
     const input = {
-        size: "2K",
-        width: 2048,
-        height: 2048,
+        size: "4K",
+        width: 4024,
+        height: 4024,
         prompt: prompt,
         max_images: 1,
-        image_input: [],
-        aspect_ratio: "4:3",
+        image_input: imagePaths,
+        aspect_ratio: "3:4",
+        seed: 1234,
+        num_inference_steps: 50,
+        guidance_scale: 8,
         sequential_image_generation: "disabled",
-        negative_prompt: "blurry, cartoon, illustration, painting, cgi, fake, distorted, watermark, text, bad anatomy",
+        negative_prompt: "blurry text, distorted text, unreadable label, out of focus letters, bad typography, misspelled text, artifact, low quality"
     }
 
-    const output = (await replicate.run(
-        "bytedance/seedream-4",
-        {input}
-    )) as string[]
+    const output = await replicate.run("bytedance/seedream-4", {input})
 
-    if (!output || output.length === 0) {
+    // Иногда Replicate возвращает массив строк (URL), иногда объекты
+    if (!output) {
         throw new Error("Replicate did not return any output files.")
     }
 
-    // @ts-ignore
-    return output[0].url()
+    // Если это массив URL
+    if (Array.isArray(output)) {
+        // Может быть массив строк или объектов
+        return output[0].url()
+    }
+
+    // Если это один объект (редкий случай)
+    if (typeof output === "object" && "url" in output) {
+        // @ts-ignore
+        return output.url()
+    }
+
+    throw new Error("Unexpected Replicate output format: " + JSON.stringify(output))
 }
 
 /**
@@ -72,7 +86,7 @@ export async function generateNanoBanana(prompt: string, images?: string): Promi
             }
 
             const buffer = Buffer.concat(chunks)
-            await fs.writeFile(filename, buffer)
+            await fsp.writeFile(filename, buffer)
             console.log(`💾 Saved: ${filename}`)
 
             return [filename]

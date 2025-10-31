@@ -3,7 +3,6 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import briefRoutes from "./routes/brief";
 import planRoutes from "./routes/contentPlan";
-import resultRoutes from "./routes/result";
 import replicateRoutes from "./routes/replicate";
 import cors from "cors";
 
@@ -16,7 +15,6 @@ app.use(cors())
 app.use("/replicate", replicateRoutes);
 app.use("/brief", briefRoutes);
 app.use("/content-plans", planRoutes);
-app.use("/result", resultRoutes);
 app.use("/static", express.static("uploads"));
 app.use("/images", express.static("images"));
 

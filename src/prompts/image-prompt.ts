@@ -20,7 +20,6 @@ const generateBaseContentPrompt = ({brandStrategy, item}: BaseProps) => {
       Brand personality: ${brandStrategy.brandPersonality}.
       Mood: ${brandStrategy.visualVibe.mood}.
       Photography style: ${brandStrategy.visualVibe.photographyStyle}.
-      Colors: ${brandStrategy.visualVibe.colorPalette.join(", ")}.
       Typography hint: ${brandStrategy.visualVibe.typography}.
       Scenario: ${item.scenario}.
       Idea: ${item.idea}.
@@ -41,7 +40,8 @@ export const generateImagePrompt = (
     }: ImageProps
 ) => {
     const vibePrompt = generateBaseContentPrompt({brandStrategy, item})
-    const brandTemplates = promptTemplates["clothes"]?.["outerwear"]
+    // @ts-ignore
+    const brandTemplates = promptTemplates[category]?.[subcategory]
     if (!brandTemplates || brandTemplates.length === 0) {
         throw new Error(`No templates found for ${category}.${subcategory}`)
     }

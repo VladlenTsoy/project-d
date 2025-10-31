@@ -26,6 +26,14 @@ export interface BriefData {
     };
     musts?: string[];
     donts?: string[];
+    products: {
+        images: {
+            fileName: string
+            originalName: string
+            url: string
+        }[]
+    }[]
+
 }
 
 
